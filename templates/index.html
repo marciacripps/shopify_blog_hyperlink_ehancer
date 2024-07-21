@@ -3,16 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shopify Blog Hyperlink Enhancer</title>
+    <title>Shopify Blog HTML Cleaner</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script>
+        function copyToClipboard() {
+            var copyText = document.getElementById("modified_html");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); /* For mobile devices */
+            document.execCommand("copy");
+            alert("Copied the text: " + copyText.value);
+        }
+    </script>
 </head>
 <body>
-    <h1>Shopify Blog Hyperlink Enhancer</h1>
-    <form action="/" method="post" enctype="multipart/form-data">
-        <input type="file" name="file">
-        <input type="submit" value="Upload">
-    </form>
-    <h2>Modified HTML:</h2>
-    <pre>{{ modified_html|safe }}</pre>
+    <div class="container">
+        <h1>Shopify Blog HTML Cleaner</h1>
+        <form action="/" method="post" enctype="multipart/form-data">
+            <h2>Upload a file (TXT or CSV) or paste your HTML content below:</h2>
+            <input type="file" name="file">
+            <label for="html_input">Or paste HTML content here:</label>
+            <textarea name="html_input" id="html_input" rows="10" style="width: 100%;"></textarea>
+            <input type="submit" value="Upload">
+        </form>
+        <h2>Modified HTML (editable):</h2>
+        <form action="/" method="post">
+            <textarea name="modified_html" id="modified_html" rows="20" style="width: 100%;">{{ modified_html|safe }}</textarea>
+            <label for="save_to_file_reprocess">
+                <input type="checkbox" name="save_to_file" id="save_to_file_reprocess"> Save to file
+            </label>
+            <input type="submit" value="Reprocess HTML">
+        </form>
+        <button onclick="copyToClipboard()">Copy to Clipboard</button>
+        <footer>
+            &copy; 2024 Shopify Blog HTML Cleaner
+        </footer>
+    </div>
 </body>
 </html>

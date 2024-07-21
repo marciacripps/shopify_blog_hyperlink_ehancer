@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, send_file
 from werkzeug.utils import secure_filename
 from bs4 import BeautifulSoup
 import os
@@ -33,23 +33,40 @@ def modify_html(html_content):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    modified_html = ''
     if request.method == 'POST':
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
-        file = request.files['file']
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(file_path)
-            with open(file_path, 'r', encoding='utf-8') as f:
-                html_content = f.read()
+        html_content = None
+
+        # Check if a file is uploaded
+        if 'file' in request.files and request.files['file'].filename != '':
+            file = request.files['file']
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(file_path)
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    html_content = f.read()
+        
+        # Check if HTML content is pasted
+        elif 'html_input' in request.form and request.form['html_input'] != '':
+            html_content = request.form['html_input']
+        
+        # Check if HTML content is in the modified HTML textarea
+        elif 'modified_html' in request.form and request.form['modified_html'] != '':
+            html_content = request.form['modified_html']
+        
+        if html_content:
             modified_html = modify_html(html_content)
-            return render_template('index.html', modified_html=modified_html)
-    return render_template('index.html', modified_html='')
+            if 'save_to_file' in request.form:
+                output_path = os.path.join(app.config['UPLOAD_FOLDER'], 'modified_html.txt')
+                with open(output_path, 'w', encoding='utf-8') as file:
+                    file.write(modified_html)
+                return send_file(output_path, as_attachment=True)
+        else:
+            flash('No file selected and no HTML input provided')
+            return redirect(request.url)
+    return render_template('index.html', modified_html=modified_html)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
