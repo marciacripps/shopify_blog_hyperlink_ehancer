@@ -22,8 +22,8 @@ Shopify Blog HTML Cleaner is a web application built with Flask that allows user
 1. **Clone the repository**:
 
     ```bash
-    git clone https://github.com/yourusername/shopify-blog-html-cleaner.git
-    cd shopify-blog-html-cleaner
+    git clone https://github.com/yourusername/shopify_blog_html_cleaner.git
+    cd shopify_blog_html_cleaner
     ```
 
 2. **Create and activate a virtual environment**:
