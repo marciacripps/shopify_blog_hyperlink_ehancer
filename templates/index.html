@@ -25,13 +25,13 @@
             <textarea name="html_input" id="html_input" rows="10" style="width: 100%;"></textarea>
             <input type="submit" value="Upload">
         </form>
-        <h2>Modified HTML (editable):</h2>
+        <h2>Modified HTML Copy/Paste or Download:</h2>
         <form action="/" method="post">
             <textarea name="modified_html" id="modified_html" rows="20" style="width: 100%;">{{ modified_html|safe }}</textarea>
             <label for="save_to_file_reprocess">
                 <input type="checkbox" name="save_to_file" id="save_to_file_reprocess"> Save to file
             </label>
-            <input type="submit" value="Reprocess HTML">
+            <input type="submit" value="Download">
         </form>
         <button onclick="copyToClipboard()">Copy to Clipboard</button>
         <footer>
