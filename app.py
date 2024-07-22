@@ -4,8 +4,8 @@ from bs4 import BeautifulSoup
 import os
 
 app = Flask(__name__)
-app.secret_key = 'supersecretkey'  # Change this to a secure key in production
-app.config['UPLOAD_FOLDER'] = 'uploads'
+app.secret_key = os.environ.get('SECRET_KEY_RENDER')  # Load from environment variable or use a default value
+app.config['UPLOAD_FOLDER'] = os.environ.get('UPLOAD_FOLDER', 'uploads')
 app.config['ALLOWED_EXTENSIONS'] = {'txt', 'csv', 'html'}
 
 if not os.path.exists(app.config['UPLOAD_FOLDER']):
